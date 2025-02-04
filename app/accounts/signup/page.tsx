@@ -4,7 +4,7 @@ import Loader from "@/components/loaders/spinner"
 import { Button } from "@/components/ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAuthContext } from "@/context/authcontext"
+import { useUserContext } from "@/context/authcontext"
 import { useToast } from "@/hooks/use-toast"
 import { useCreateUserMutation, useLoginUserMutation } from "@/react-query/mutations-queries"
 import { signUpSchema } from "@/utils/validation-schema"
@@ -17,7 +17,7 @@ import { z } from "zod"
 
 export default function Page() {
 	const { toast } = useToast()
-	const { checkAuthUser, isPending: isUserLoading } = useAuthContext()
+	const { checkAuthUser, isPending: isUserLoading } = useUserContext()
 	const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUserMutation()
 	const { mutateAsync: loginUser, isPending: isLoggingIn } = useLoginUserMutation()
 
@@ -42,7 +42,7 @@ export default function Page() {
 			})
 		}
 
-		
+
 		const session = await loginUser({
 			email: userData.email, password: userData.password
 		}) // also this try catch
@@ -51,7 +51,7 @@ export default function Page() {
 				title: "Login Failed. Please try again",
 			})
 		}
-		
+
 		const isUserLoggedIn = await checkAuthUser()
 		if (isUserLoggedIn) {
 			redirect("/")

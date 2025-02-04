@@ -56,11 +56,7 @@ export async function getCurrentUser() {
 export async function logoutUser() {
 	const { account } = await createSessionClient()
 
-	try {
-		await account.deleteSession("current")
-	} catch (error) {
-		console.error("Error logging out:", error)
-	}
+	await account.deleteSession("current");
 
 	// Remove the session cookie
 	(await cookies()).set("my-custom-session", "", {

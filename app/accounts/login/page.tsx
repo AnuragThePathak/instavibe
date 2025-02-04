@@ -4,7 +4,7 @@ import Loader from "@/components/loaders/spinner"
 import { Button } from "@/components/ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAuthContext } from "@/context/authcontext"
+import { useUserContext } from "@/context/authcontext"
 import { useToast } from "@/hooks/use-toast"
 import { useLoginUserMutation } from "@/react-query/mutations-queries"
 import { loginSchema } from "@/utils/validation-schema"
@@ -17,7 +17,7 @@ import { z } from "zod"
 
 export default function Page() {
 	const { toast } = useToast()
-	const { checkAuthUser, isPending: isUserLoading } = useAuthContext()
+	const { checkAuthUser, isPending: isUserLoading } = useUserContext()
 	const { mutateAsync: loginUser, isPending: isLoggingIn } = useLoginUserMutation()
 
 	const form = useForm<z.infer<typeof loginSchema>>({
@@ -38,7 +38,7 @@ export default function Page() {
 				title: "Login Failed. Please try again",
 			})
 		}
-		
+
 		const isUserLoggedIn = await checkAuthUser()
 		if (isUserLoggedIn) {
 			redirect("/")
@@ -58,7 +58,7 @@ export default function Page() {
 				className="object-cover" />
 			<h1 className="h3-bold md:h2-bold pt-5 sm:pt-12">Log in to your account</h1>
 			<p className="text-light-3 small-medium md:base-regular mt-2">
-			Welcome back! Please enter your details.</p>
+				Welcome back! Please enter your details.</p>
 
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}
@@ -91,7 +91,7 @@ export default function Page() {
 					/>
 					<Button type="submit" className="shad-button_primary">
 						{
-							 isLoggingIn || isUserLoading ?
+							isLoggingIn || isUserLoading ?
 								<div className="flex-center gap-2">
 									<Loader /> Loading...
 								</div>

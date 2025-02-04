@@ -24,19 +24,19 @@ const INITIAl_STATE = {
 	logout: async () => { }
 }
 
-const AuthContext = createContext<IContextType>(INITIAl_STATE)
+const UserContext = createContext<IContextType>(INITIAl_STATE)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState(INITIAL_USER)
 	const [isAuthenticated, setIsAuthenticated] = useState(false)
 	const [isPending, setIsPending] = useState(false)
-	const pathname = usePathname(); // Get current page route
+	const pathname = usePathname() // Get current page route
 
 	const checkAuthUser = async () => {
 		setIsPending(true)
 		let success = false
 		try {
-			const currentUser = await getCurrentUser();
+			const currentUser = await getCurrentUser()
 			if (currentUser) {
 				setUser({
 					id: currentUser.$id,
@@ -45,24 +45,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					email: currentUser.email,
 					imageUrl: currentUser.imageUrl,
 					bio: currentUser.bio
-				});
-				setIsAuthenticated(true);
-				success = true;
+				})
+				setIsAuthenticated(true)
+				success = true
 			}
 		} catch (e) {
-			console.error("Auth error:", e);
+			console.error("Auth error:", e)
 		} finally {
-			setIsPending(false);
+			setIsPending(false)
 		}
-		return success;
-	};
+		return success
+	}
 
 	const logout = async () => {
-		await logoutUser();
-		setUser(INITIAL_USER);
-		setIsAuthenticated(false);
-		redirect("/accounts/login");
-	};
+		await logoutUser()
+		setUser(INITIAL_USER)
+		setIsAuthenticated(false)
+		redirect("/accounts/login")
+	}
 
 	useEffect(() => {
 		const checkAuth = async () => {
@@ -71,9 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					redirect("/accounts/login")
 				}
 			}
-		};
-		checkAuth();
-	}, [pathname]);
+		}
+		checkAuth()
+	}, [pathname])
 
 	const value = {
 		user,
@@ -86,10 +86,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}
 
 	return (
-		<AuthContext.Provider value={value}>
+		<UserContext.Provider value={value}>
 			{children}
-		</AuthContext.Provider>
+		</UserContext.Provider>
 	)
 }
 
-export const useAuthContext = () => useContext(AuthContext)
+export const useUserContext = () => useContext(UserContext)
