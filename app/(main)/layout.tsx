@@ -8,9 +8,11 @@ export default function Layout({ children }: { children: ReactNode }) {
 		<div className="w-full md:flex">
 			<Topbar />
 			<LeftBar />
+
 			<section className="flex flex-1 h-full">
 				{children}
 			</section>
+			
 			<BottomBar />
 		</div>
 	)

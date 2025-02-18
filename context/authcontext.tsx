@@ -1,6 +1,6 @@
 "use client"
 
-import { getCurrentUser, logoutUser } from "@/server/requests"
+import { getCurrentUser, logoutUser } from "@/server/user-requests"
 import { IContextType } from "@/types/context"
 import { redirect, usePathname } from "next/navigation"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"

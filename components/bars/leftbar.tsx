@@ -22,7 +22,7 @@ export default function LeftBar() {
 	}, [loggedOut])
 
 	return (
-		<nav className="leftsidebar">
+		<nav className="leftsidebar max-h-screen">
 			<div className="flex flex-col gap-11">
 				<Link href="/" className="flex items-center gap-3">
 					<Image src="/images/logo.svg" alt="logo" width="170" height="36" />
