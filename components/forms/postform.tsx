@@ -20,19 +20,21 @@ import { postSchema } from "@/utils/validation-schema"
 import { Models } from "node-appwrite"
 import { useToast } from "@/hooks/use-toast"
 import { useUserContext } from "@/context/authcontext"
-import { useCreatePostMutation } from "@/react-query/mutations-queries"
+import { useCreatePostMutation, useUpdatePostMutation } from "@/react-query/mutations-queries"
 import { redirect } from "next/navigation"
 import Loader from "../loaders/spinner"
 
 type PostFormProps = {
-	post: Models.Document
+	post?: Models.Document,
+	action: "create" | "update"
 }
 
 
-export default function PostForm({ post }: PostFormProps) {
+export default function PostForm({ post, action }: PostFormProps) {
 	const { toast } = useToast()
 	const { user } = useUserContext()
 	const { mutateAsync: createPost, isPending: isCreating } = useCreatePostMutation()
+	const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePostMutation()
 
 	const form = useForm<z.infer<typeof postSchema>>({
 		resolver: zodResolver(postSchema),
@@ -45,8 +47,25 @@ export default function PostForm({ post }: PostFormProps) {
 	})
 
 	async function onSubmit(values: z.infer<typeof postSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
+		// action = update
+		if (post && action === "update") {
+			const updatedPost = await updatePost({
+				...values,
+				postId: post.$id,
+				imageId: post.imageId,
+				imageUrl: post.imageUrl,
+			})
+
+			if (!updatedPost) {
+				toast({
+					title: "Failed to update the post, try again.",
+				})
+			}
+
+			return redirect(`/posts/${post.$id}`)
+		}
+
+		// action = create
 		const newPost = await createPost({
 			...values,
 			userId: user.id,
@@ -134,8 +153,8 @@ export default function PostForm({ post }: PostFormProps) {
 					</Button>
 					<Button type="submit"
 						className="shad-button_primary whitespace-nowrap"
-						disabled={isCreating}>
-						{isCreating && <Loader />}
+						disabled={isCreating || isUpdating}>
+						{(isCreating || isUpdating) && <Loader />}
 						Submit
 					</Button>
 				</div>

@@ -16,7 +16,7 @@ export default function PostCard({ post }: { post: Models.Document }) {
 				<div className="flex items-center gap-3">
 					<Link href={`/profile/${post.creator.$id}`}>
 						<Image
-							src={post?.creator?.imageUrl || "/icons/profile-placeholder.svg"}
+							src={post.creator?.imageUrl || "/icons/profile-placeholder.svg"}
 							alt="creator"
 							className="rounded-full w-10 lg:h-12"
 							width="10"
@@ -43,7 +43,7 @@ export default function PostCard({ post }: { post: Models.Document }) {
 				</Link>
 			</div>
 
-			<Link href={`/post/${post.$id}`}>
+			<Link href={`/posts/${post.$id}`}>
 				<div className="small-medium lg:base-medium py-5">
 					<p>{post.caption}</p>
 					<ul className="flex gap-1 mt-2">

@@ -15,7 +15,7 @@ export default function Page() {
 					<h1 className="h3-bold md:h2-bold text-left w-full">Create Post</h1>
 				</div>
 				
-				<PostForm />
+				<PostForm action="create" />
 			</div>
 		</div>
 	)

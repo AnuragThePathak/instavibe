@@ -1,6 +1,6 @@
 "use server"
 
-import { INewPost } from "@/types"
+import { INewPost, IUpdatePost } from "@/types"
 import { ID, ImageGravity, Query } from "node-appwrite"
 import { createAdminClient } from "./appwrite"
 
@@ -32,6 +32,64 @@ export async function createPost(post: INewPost) {
 	}
 
 	return newPost
+}
+
+export async function updatePost(post: IUpdatePost) {
+	const { databases } = await createAdminClient()
+
+	const hasFileToUpdate = post.file.length > 0
+
+	let image = {
+		imageId: post.imageId,
+	}
+
+	if (hasFileToUpdate) {
+		const uploaded = await uploadFile(post.file[0])
+
+		image = {
+			...image, imageId: uploaded.$id
+		}
+	}
+
+	const tags = post.tags?.replace(/ /g, "").split(",") || []
+
+	let updatedPost = null
+	try {
+		updatedPost = await databases.updateDocument(
+			process.env.APPWRITE_DATABASE_ID!,
+			process.env.APPWRITE_POST_COLLECTION_ID!,
+			post.postId,
+			{
+				caption: post.caption,
+				location: post.location,
+				tags,
+				imageId: image.imageId,
+			}
+		)
+	} catch (e) {
+		console.error(e)
+		if (hasFileToUpdate) {
+			await deleteFile(image.imageId)
+		}
+	}
+
+	if (hasFileToUpdate) {
+		await deleteFile(post.imageId)
+	}
+
+	return updatedPost
+}
+
+export async function deletePost(postId: string, imageId: string) {
+	const { databases } = await createAdminClient()
+	const status = await databases.deleteDocument(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_POST_COLLECTION_ID!,
+		postId
+	)
+
+	deleteFile(imageId)
+	return status
 }
 
 export async function uploadFile(file: File) {
@@ -118,4 +176,39 @@ export async function unsavePost(saveId: string) {
 		saveId
 	)
 	return status
+}
+
+export async function getPostById(postId: string) {
+	const { databases } = await createAdminClient()
+	const post = await databases.getDocument(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_POST_COLLECTION_ID!,
+		postId
+	)
+	return post
+}
+
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+	const { databases } = await createAdminClient()
+
+	const queries = [Query.orderDesc("$updatedAt"), Query.limit(15)]
+	if (pageParam) {
+		queries.push(Query.cursorAfter(pageParam.toString()))
+	}
+
+	return await databases.listDocuments(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_POST_COLLECTION_ID!,
+		queries
+	)
+}
+
+export async function searchPosts(searchTerm: string) {
+	const { databases } = await createAdminClient()
+	const posts = await databases.listDocuments(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_POST_COLLECTION_ID!,
+		[Query.search("caption", searchTerm)]
+	)
+	return posts
 }
