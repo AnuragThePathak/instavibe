@@ -1,6 +1,6 @@
 import QUERY_KEYS from "@/constants/queries"
 import { getFile, getFilePreview, getInfinitePosts, getPostById, getRecentPosts, searchPosts } from "@/server/post-requests"
-import { getAvatar, getCurrentUser } from "@/server/user-requests"
+import { getAvatar, getCurrentUser, getUserById } from "@/server/user-requests"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 
 export const useRecentPostsQuery = () => {
@@ -68,5 +68,13 @@ export const useSearchPostsQuery = (searchValue: string) => {
 		queryKey:[QUERY_KEYS.SEARCH_POSTS, searchValue],
 		queryFn: () => searchPosts(searchValue),
 		enabled: !!searchValue
+	})
+}
+
+export const useGetUserById = (userId: string) => {
+	return useQuery({
+		queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
+		queryFn: () => getUserById(userId),
+		enabled: !!userId
 	})
 }

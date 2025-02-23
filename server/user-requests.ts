@@ -71,3 +71,13 @@ export async function getAvatar(email: string) {
 	const { avatars } = await createAdminClient()
 	return await avatars.getInitials(email)
 }
+
+export async function getUserById(userId: string) {
+	const { databases } = await createAdminClient()
+	const user = await databases.getDocument(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_USER_COLLECTION_ID!,
+		userId
+	)
+	return user
+}

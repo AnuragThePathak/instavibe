@@ -25,7 +25,7 @@ export default function PostStats({ post, userId }: PostStatsProps) {
 	const { data: currentUser } = useGetCurrentUserQuery()
 
 	const savedPosts = currentUser?.save
-		.find((record: Models.Document) => record.post.$id === post.$id)
+		.find((record: Models.Document) => record.post?.$id === post.$id)
 
 	useEffect(() => {
 		setIsSaved(!!savedPosts)
