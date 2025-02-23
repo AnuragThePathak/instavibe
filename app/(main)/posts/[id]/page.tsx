@@ -4,17 +4,22 @@ import PostStats from "@/components/others/poststats"
 import { useGetPostByIDQuery } from "@/react-query/queries"
 import Link from "next/link"
 import moment from "moment"
-import { useParams } from "next/navigation"
+import { redirect, useParams } from "next/navigation"
 import Image from "next/image"
 import Loader from "@/components/loaders/spinner"
 import { useUserContext } from "@/context/authcontext"
 import { Button } from "@/components/ui/button"
+import { useDeletePostMutation } from "@/react-query/mutations-queries"
 
 export default function Page() {
 	const { id } = useParams<{ id: string }>()
 	const { data: post, isLoading } = useGetPostByIDQuery(id)
+	const { mutate: deletePost } = useDeletePostMutation()
 	const { user } = useUserContext()
-	const handleDelete = () => { }
+	const handleDelete = () => { 
+		deletePost({ postId: id, imageId: post?.imageId })
+		redirect("/")
+	}
 
 	return (
 		<div className="post_details-container">
