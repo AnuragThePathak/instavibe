@@ -10,6 +10,8 @@ import Loader from "@/components/loaders/spinner"
 import { useUserContext } from "@/context/authcontext"
 import { Button } from "@/components/ui/button"
 import { useDeletePostMutation } from "@/react-query/mutations-queries"
+import PostWrapper from "@/components/wrappers/postwrapper"
+import AvatarWrapper from "@/components/wrappers/avatarwrapper"
 
 export default function Page() {
 	const { id } = useParams<{ id: string }>()
@@ -25,25 +27,13 @@ export default function Page() {
 		<div className="post_details-container">
 			{isLoading || !post ? <Loader /> : (
 				<div className="post_details-card">
-					<Image
-						src={post.imageUrl || "/icons/profile-placeholder.svg"}
-						alt="post"
-						className="post_details-img"
-						width="500"
-						height="750"
-					/>
+					<PostWrapper imageId={post.imageId} className="post_details-img" />
 
 					<div className="post_details-info">
 						<div className="flex-between w-full">
 							<Link href={`/profile/${post.creator.$id}`}
 								className="flex items-center gap-3">
-								<Image
-									src={post.creator?.imageUrl || "/icons/profile-placeholder.svg"}
-									alt="creator"
-									className="rounded-full w-8 h-8 lg:w-12 lg:h-12"
-									width="10"
-									height="10"
-								/>
+									<AvatarWrapper email={post.creator?.email} className="w-8 h-8 lg:w-12 lg:h-12" />
 
 								<div className="flex gap-1 flex-col">
 										<p className="base-medium lg:body-bold text-light-1">
