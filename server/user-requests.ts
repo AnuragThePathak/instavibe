@@ -66,3 +66,8 @@ export async function logoutUser() {
 
 	return { success: true }
 }
+
+export async function getAvatar(email: string) {
+	const { avatars } = await createAdminClient()
+	return await avatars.getInitials(email)
+}

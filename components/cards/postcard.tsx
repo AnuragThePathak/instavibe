@@ -6,9 +6,36 @@ import Image from "next/image"
 import Link from "next/link"
 import { Models } from "node-appwrite"
 import PostStats from "../others/poststats"
+import { useGetAvatarQuery, useGetImageQuery } from "@/react-query/queries"
+import { useEffect, useState } from "react"
+import Loader from "../loaders/spinner"
 
 export default function PostCard({ post }: { post: Models.Document }) {
 	const { user } = useUserContext()
+	const { data: avatarBuffer } = useGetAvatarQuery(post.creator.email)
+	const { data: imageBuffer, isPending: isLoadingImage } = useGetImageQuery(post.imageId)
+	const [imageSrc, setImageSrc] = useState<string>("")
+	const [avatarSrc, setAvatarSrc] = useState<string>("")
+
+	useEffect(() => {
+		if (imageBuffer) {
+			const blob = new Blob([imageBuffer], { type: "image/png" }) // Adjust MIME type if needed
+			const blobUrl = URL.createObjectURL(blob)
+			setImageSrc(blobUrl)
+
+			return () => URL.revokeObjectURL(blobUrl) // Cleanup
+		}
+	}, [imageBuffer])
+
+	useEffect(() => {
+		if (avatarBuffer) {
+			const blob = new Blob([avatarBuffer], { type: "image/png" })
+			const blobUrl = URL.createObjectURL(blob)
+			setAvatarSrc(blobUrl)
+
+			return () => URL.revokeObjectURL(blobUrl)
+		}
+	}, [avatarBuffer])
 
 	return (
 		<div className="post-card">
@@ -16,9 +43,9 @@ export default function PostCard({ post }: { post: Models.Document }) {
 				<div className="flex items-center gap-3">
 					<Link href={`/profile/${post.creator.$id}`}>
 						<Image
-							src={post.creator?.imageUrl || "/icons/profile-placeholder.svg"}
+							src={avatarSrc || "/icons/profile-placeholder.svg"}
 							alt="creator"
-							className="rounded-full w-10 lg:h-12"
+							className="rounded-full w-12 lg:h-12"
 							width="10"
 							height="10"
 						/>
@@ -55,13 +82,18 @@ export default function PostCard({ post }: { post: Models.Document }) {
 					</ul>
 				</div>
 
-				<Image
-					src={post.imageUrl || "/icons/profile-placeholder.svg"}
-					className="post-card_img"
-					alt="post image"
-					width={500}
-					height={500}
-				/>
+				{isLoadingImage ? (
+					<div className="h-80 w-full">
+						<Loader />
+					</div>
+				) :
+					<Image
+						src={imageSrc || "/icons/profile-placeholder.svg"}
+						className="post-card_img"
+						alt="post image"
+						width={500}
+						height={500}
+					/>}
 			</Link>
 
 			<PostStats post={post} userId={user.id} />

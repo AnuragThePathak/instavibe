@@ -17,6 +17,9 @@ enum QUERY_KEYS {
 
 	//  SEARCH KEYS
 	SEARCH_POSTS,
+	GET_PREVIEW,
+	GET_IMAGE,
+	GET_AVATAR,
 }
 
 export default QUERY_KEYS

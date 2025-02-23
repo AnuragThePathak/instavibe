@@ -123,13 +123,22 @@ export async function deleteFile(fileId: string) {
 
 export async function getFilePreview(fileId: string) {
 	const { storage } = await createAdminClient()
-	const file = storage.getFilePreview(
+	const file = await storage.getFilePreview(
 		process.env.APPWRITE_STORAGE_ID!,
 		fileId,
 		2000,
 		2000,
 		ImageGravity.Top,
 		100)
+	return file
+}
+
+export async function getFile(fileId: string) {
+	const { storage } = await createAdminClient()
+	const file = await storage.getFileDownload(
+		process.env.APPWRITE_STORAGE_ID!,
+		fileId
+	)
 	return file
 }
 

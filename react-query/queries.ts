@@ -1,6 +1,6 @@
 import QUERY_KEYS from "@/constants/queries"
-import { getInfinitePosts, getPostById, getRecentPosts, searchPosts } from "@/server/post-requests"
-import { getCurrentUser } from "@/server/user-requests"
+import { getFile, getFilePreview, getInfinitePosts, getPostById, getRecentPosts, searchPosts } from "@/server/post-requests"
+import { getAvatar, getCurrentUser } from "@/server/user-requests"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 
 export const useRecentPostsQuery = () => {
@@ -22,6 +22,30 @@ export const useGetPostByIDQuery = (postId: string) => {
 		queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
 		queryFn: () => getPostById(postId),
 		enabled: !!postId
+	})
+}
+
+export const useGetPreviewQuery = (fileId: string) => {
+	return useQuery({
+		queryKey: [QUERY_KEYS.GET_PREVIEW, fileId],
+		queryFn: () => getFilePreview(fileId),
+		enabled: !!fileId
+	})
+}
+
+export const useGetImageQuery = (fileId: string) => {
+	return useQuery({
+		queryKey: [QUERY_KEYS.GET_IMAGE, fileId],
+		queryFn: () => getFile(fileId),
+		enabled: !!fileId
+	})
+}
+
+export const useGetAvatarQuery = (email: string) => {
+	return useQuery({
+		queryKey: [QUERY_KEYS.GET_AVATAR, email],
+		queryFn: () => getAvatar(email),
+		enabled: !!email
 	})
 }
 
