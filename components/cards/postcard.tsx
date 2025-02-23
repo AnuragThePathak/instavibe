@@ -18,7 +18,7 @@ export default function PostCard({ post }: { post: Models.Document }) {
 			<div className="flex-between">
 				<div className="flex items-center gap-3">
 					<Link href={`/profile/${post.creator.$id}`}>
-						<AvatarWrapper email={post.creator.email} />
+						<AvatarWrapper email={post.creator.email} className="w-12 lg:h-12" />
 					</Link>
 
 					<div className="flex flex-col">
@@ -52,7 +52,7 @@ export default function PostCard({ post }: { post: Models.Document }) {
 					</ul>
 				</div>
 
-				<PostWrapper imageId={post.imageId} />
+				<PostWrapper imageId={post.imageId} className="post-card_img" />
 			</Link>
 
 			<PostStats post={post} userId={user.id} />

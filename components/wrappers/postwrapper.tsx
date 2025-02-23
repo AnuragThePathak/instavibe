@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Loader from "../loaders/spinner"
 
-export default function PostWrapper({ imageId }: { imageId: string }) {
+export default function PostWrapper({ imageId, className }: { imageId: string, className: string }) {
 	const { data: imageBuffer, isPending: isLoadingImage } = useGetImageQuery(imageId)
 	const [imageSrc, setImageSrc] = useState<string>("")
 
@@ -21,13 +21,13 @@ export default function PostWrapper({ imageId }: { imageId: string }) {
 
 	return (
 		<>
-			{isLoadingImage ? (<div className="h-80 w-full">
+			{isLoadingImage ? (<div className="h-80 w-full flex items-center justify-center">
 				<Loader />
 			</div>
 			) :
 				<Image
 					src={imageSrc || "/icons/profile-placeholder.svg"}
-					className="post-card_img"
+					className={className}
 					alt="post image"
 					width={500}
 					height={500}
