@@ -31,12 +31,13 @@ export default function Page() {
 
 	const { data: currentUser } = useGetUserById(id)
 
-	if (!currentUser)
+	if (!currentUser) {
 		return (
 			<div className="flex-center w-full h-full">
 				<Loader />
 			</div>
 		)
+	}
 
 	return (
 		<div className="profile-container">
