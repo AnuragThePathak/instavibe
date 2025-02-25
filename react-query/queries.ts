@@ -1,6 +1,6 @@
 import QUERY_KEYS from "@/constants/queries"
 import { getFile, getFilePreview, getInfinitePosts, getPostById, getRecentPosts, searchPosts } from "@/server/post-requests"
-import { getAvatar, getCurrentUser, getUserById } from "@/server/user-requests"
+import { getAllUsers, getAvatar, getCurrentUser, getUserById } from "@/server/user-requests"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 
 export const useRecentPostsQuery = () => {
@@ -76,5 +76,22 @@ export const useGetUserById = (userId: string) => {
 		queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
 		queryFn: () => getUserById(userId),
 		enabled: !!userId
+	})
+}
+
+export const verifyEmailQuery = (secret: string, userId: string) => {
+}
+
+export const useGetUsersQuery = () => {
+	return useInfiniteQuery({
+		queryKey: [QUERY_KEYS.GET_USERS],
+		queryFn: getAllUsers,
+		getNextPageParam: (lastPage) => {
+			let lastId = null
+			if (lastPage && lastPage.documents.length > 0) {
+				lastId = lastPage.documents[lastPage.documents.length - 1].$id
+			}
+			return lastId
+		}
 	})
 }
