@@ -1,7 +1,7 @@
 "use server"
 import { INewUser } from "@/types"
 import { createAdminClient, createSessionClient } from "./appwrite"
-import { ID, Query } from "node-appwrite"
+import { ID, Models, Query } from "node-appwrite"
 import { cookies } from "next/headers"
 
 export async function createUser(user: INewUser) {
@@ -50,7 +50,7 @@ export async function getCurrentUser() {
 		[Query.equal("accountId", user.$id)]
 	)
 
-	return userDoc.documents[0]
+	return {...userDoc.documents[0], emailVerified: user.emailVerification} as Models.Document
 }
 
 export async function logoutUser() {
@@ -95,4 +95,14 @@ export async function getAllUsers({ pageParam }: { pageParam: number }) {
 		queries
 	)
 	return users
+}
+
+export async function verifyEmail(userId: string, secret: string) {
+	const { account } = await createSessionClient()
+	return await account.updateVerification(userId, secret)
+}
+
+export async function sendVerificationEmail() {
+	const { account } = await createSessionClient()
+	return await account.createVerification(`${process.env.SITE_URL!}/accounts/verify`)
 }

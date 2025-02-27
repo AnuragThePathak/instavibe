@@ -5,8 +5,8 @@ export type IContextType = {
 	user: IUser,
 	isPending: boolean,
 	setUser: Dispatch<SetStateAction<IUser>>,
-	isAuthenticated: boolean,
-	setIsAuthenticated: Dispatch<SetStateAction<boolean>>,
-	checkAuthUser: () => Promise<boolean>,
+	isAuthenticated: number,
+	setIsAuthenticated: Dispatch<SetStateAction<number>>,
+	checkAuthUser: () => Promise<number>,
 	logout: () => Promise<void>,
 }

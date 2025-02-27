@@ -79,9 +79,6 @@ export const useGetUserById = (userId: string) => {
 	})
 }
 
-export const verifyEmailQuery = (secret: string, userId: string) => {
-}
-
 export const useGetUsersQuery = () => {
 	return useInfiniteQuery({
 		queryKey: [QUERY_KEYS.GET_USERS],

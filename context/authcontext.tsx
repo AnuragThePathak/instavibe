@@ -14,13 +14,19 @@ const INITIAL_USER = {
 	bio: ""
 }
 
+export enum AUTH_STATUS {
+	UNAUTHORIZED,
+	AUTHORIZED,
+	EMAIL_VERIFIED
+}
+
 const INITIAl_STATE = {
 	user: INITIAL_USER,
 	isPending: false,
-	isAuthenticated: false,
+	isAuthenticated: AUTH_STATUS.UNAUTHORIZED,
 	setUser: () => { },
 	setIsAuthenticated: () => { },
-	checkAuthUser: async () => false,
+	checkAuthUser: async () => AUTH_STATUS.UNAUTHORIZED,
 	logout: async () => { }
 }
 
@@ -28,13 +34,13 @@ const UserContext = createContext<IContextType>(INITIAl_STATE)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState(INITIAL_USER)
-	const [isAuthenticated, setIsAuthenticated] = useState(false)
+	const [isAuthenticated, setIsAuthenticated] = useState<AUTH_STATUS>(AUTH_STATUS.UNAUTHORIZED)
 	const [isPending, setIsPending] = useState(false)
 	const pathname = usePathname() // Get current page route
 
 	const checkAuthUser = async () => {
 		setIsPending(true)
-		let success = false
+		let status = AUTH_STATUS.UNAUTHORIZED
 		try {
 			const currentUser = await getCurrentUser()
 			if (currentUser) {
@@ -46,29 +52,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					imageUrl: currentUser.imageUrl,
 					bio: currentUser.bio
 				})
-				setIsAuthenticated(true)
-				success = true
+
+				setIsAuthenticated(AUTH_STATUS.AUTHORIZED)
+				status = AUTH_STATUS.AUTHORIZED
+
+				if (currentUser.emailVerified) {
+					setIsAuthenticated(AUTH_STATUS.EMAIL_VERIFIED)
+					status = AUTH_STATUS.EMAIL_VERIFIED
+				}
 			}
 		} catch (e) {
 			console.error("Auth error:", e)
 		} finally {
 			setIsPending(false)
 		}
-		return success
+		return status
 	}
 
 	const logout = async () => {
 		await logoutUser()
 		setUser(INITIAL_USER)
-		setIsAuthenticated(false)
+		setIsAuthenticated(AUTH_STATUS.UNAUTHORIZED)
 		redirect("/accounts/login")
 	}
 
 	useEffect(() => {
 		const checkAuth = async () => {
-			if (pathname !== "/accounts/signup") {
-				if (!(await checkAuthUser())) {
+			if (pathname !== "/accounts/signup" && pathname !== "accounts/verify") {
+				const authStatus = await checkAuthUser()
+				if (authStatus === AUTH_STATUS.UNAUTHORIZED) {
 					redirect("/accounts/login")
+				}
+				if (authStatus === AUTH_STATUS.AUTHORIZED) {
+					redirect("/accounts/verification")
 				}
 			}
 		}

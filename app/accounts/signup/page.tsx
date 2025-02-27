@@ -6,7 +6,8 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "
 import { Input } from "@/components/ui/input"
 import { useUserContext } from "@/context/authcontext"
 import { useToast } from "@/hooks/use-toast"
-import { useCreateUserMutation, useLoginUserMutation } from "@/react-query/mutations-queries"
+import { useCreateUserMutation, useLoginUserMutation, useSendVerificationEmail } from "@/react-query/mutations-queries"
+
 import { signUpSchema } from "@/utils/validation-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
@@ -20,6 +21,7 @@ export default function Page() {
 	const { checkAuthUser, isPending: isUserLoading } = useUserContext()
 	const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUserMutation()
 	const { mutateAsync: loginUser, isPending: isLoggingIn } = useLoginUserMutation()
+	const { mutateAsync: sendVerificationEmail, isPending: isSendingEmail } =  useSendVerificationEmail()
 
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
@@ -52,9 +54,16 @@ export default function Page() {
 			})
 		}
 
+		const isEmailSent = await sendVerificationEmail()
+		if (!isEmailSent) {
+			toast({
+				title: "Couldn't send verification email. Please try later.",
+			})
+		}
+
 		const isUserLoggedIn = await checkAuthUser()
 		if (isUserLoggedIn) {
-			redirect("/")
+			redirect("/accounts/verification")
 		} else {
 			toast({
 				title: "Login Failed. Please try again",
@@ -130,7 +139,7 @@ export default function Page() {
 					/>
 					<Button type="submit" className="shad-button_primary">
 						{
-							isCreatingUser || isLoggingIn || isUserLoading ?
+							isCreatingUser || isLoggingIn || isUserLoading || isSendingEmail ?
 								<div className="flex-center gap-2">
 									<Loader /> Loading...
 								</div>

@@ -4,7 +4,7 @@ import Loader from "@/components/loaders/spinner"
 import { Button } from "@/components/ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useUserContext } from "@/context/authcontext"
+import { AUTH_STATUS, useUserContext } from "@/context/authcontext"
 import { useToast } from "@/hooks/use-toast"
 import { useLoginUserMutation } from "@/react-query/mutations-queries"
 import { loginSchema } from "@/utils/validation-schema"
@@ -40,8 +40,10 @@ export default function Page() {
 		}
 
 		const isUserLoggedIn = await checkAuthUser()
-		if (isUserLoggedIn) {
+		if (isUserLoggedIn === AUTH_STATUS.EMAIL_VERIFIED) {
 			redirect("/")
+		} else if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
+			redirect("/accounts/verification")
 		} else {
 			toast({
 				title: "Login Failed. Please try again",

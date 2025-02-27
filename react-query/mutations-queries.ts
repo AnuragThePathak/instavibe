@@ -1,6 +1,6 @@
 import QUERY_KEYS from "@/constants/queries"
 import { createPost, deletePost, likePost, savePost, unsavePost, updatePost } from "@/server/post-requests"
-import { createUser, loginUser, logoutUser } from "@/server/user-requests"
+import { createUser, loginUser, logoutUser, sendVerificationEmail, verifyEmail } from "@/server/user-requests"
 import { INewPost, INewUser, IUpdatePost } from "@/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
@@ -126,5 +126,23 @@ export const useUnsavePostMutation = () => {
 				queryKey: QUERY_KEYS.GET_CURRENT_USER
 			})
 		}
+	})
+}
+
+export const useVerifyEmailMutation = () => {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: ({ userId, secret }: { userId: string, secret: string }) => verifyEmail(userId, secret),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.GET_CURRENT_USER
+			})
+		}
+	})
+}
+
+export const useSendVerificationEmail = () => {
+	return useMutation({
+		mutationFn: () => sendVerificationEmail()
 	})
 }
