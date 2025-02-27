@@ -109,7 +109,7 @@ export default function PostForm({ post, action }: PostFormProps) {
 							<FormControl>
 								<FileUploader
 									fieldChange={field.onChange}
-									mediaUrl={post?.imageUrl}
+									imageId={post?.imageId}
 								/>
 							</FormControl>
 							<FormMessage className="shad-form_message" />
