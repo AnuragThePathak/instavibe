@@ -200,7 +200,7 @@ export async function getPostById(postId: string) {
 export async function getInfinitePosts({ pageParam }: { pageParam: string | null }) {
 	const { databases } = await createAdminClient()
 
-	const queries = [Query.orderDesc("$updatedAt"), Query.limit(5)]
+	const queries = [Query.orderDesc("$updatedAt"), Query.limit(9)]
 	
 	// Only add cursorAfter if a valid pageParam exists
 	if (pageParam) {

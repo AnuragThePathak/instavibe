@@ -84,7 +84,7 @@ export async function getUserById(userId: string) {
 
 export async function getAllUsers({ pageParam }: { pageParam: string | null }) {
 	const { databases } = await createAdminClient()
-	const queries = [Query.limit(20)]
+	const queries = [Query.limit(18)]
 	if (pageParam) {
 		queries.push(Query.cursorAfter(pageParam))
 	}
