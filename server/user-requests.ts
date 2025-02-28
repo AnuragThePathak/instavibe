@@ -82,11 +82,11 @@ export async function getUserById(userId: string) {
 	return user
 }
 
-export async function getAllUsers({ pageParam }: { pageParam: number }) {
+export async function getAllUsers({ pageParam }: { pageParam: string | null }) {
 	const { databases } = await createAdminClient()
 	const queries = [Query.limit(20)]
 	if (pageParam) {
-		queries.push(Query.cursorAfter(pageParam.toString()))
+		queries.push(Query.cursorAfter(pageParam))
 	}
 	
 	const users = await databases.listDocuments(

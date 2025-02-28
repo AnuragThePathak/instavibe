@@ -53,12 +53,13 @@ export const useGetPostsQuery = () => {
 	return useInfiniteQuery({
 		queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
 		queryFn: getInfinitePosts,
+		initialPageParam: null, // ✅ Ensure this matches the new type (string | null)
 		getNextPageParam: (lastPage) => {
-			let lastId = null
 			if (lastPage && lastPage.documents.length > 0) {
-				lastId = lastPage.documents[lastPage.documents.length - 1].$id
+				// ✅ Return last document ID as string, since Appwrite uses cursor-based pagination
+				return lastPage.documents[lastPage.documents.length - 1].$id
 			}
-			return lastId
+			return null
 		}
 	})
 }
@@ -83,6 +84,7 @@ export const useGetUsersQuery = () => {
 	return useInfiniteQuery({
 		queryKey: [QUERY_KEYS.GET_USERS],
 		queryFn: getAllUsers,
+		initialPageParam: null,
 		getNextPageParam: (lastPage) => {
 			let lastId = null
 			if (lastPage && lastPage.documents.length > 0) {

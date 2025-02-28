@@ -197,12 +197,14 @@ export async function getPostById(postId: string) {
 	return post
 }
 
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+export async function getInfinitePosts({ pageParam }: { pageParam: string | null }) {
 	const { databases } = await createAdminClient()
 
-	const queries = [Query.orderDesc("$updatedAt"), Query.limit(15)]
+	const queries = [Query.orderDesc("$updatedAt"), Query.limit(5)]
+	
+	// Only add cursorAfter if a valid pageParam exists
 	if (pageParam) {
-		queries.push(Query.cursorAfter(pageParam.toString()))
+		queries.push(Query.cursorAfter(pageParam))
 	}
 
 	return await databases.listDocuments(
@@ -211,6 +213,7 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
 		queries
 	)
 }
+
 
 export async function searchPosts(searchTerm: string) {
 	const { databases } = await createAdminClient()
