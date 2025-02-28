@@ -9,6 +9,7 @@ import Link from "next/link"
 import { redirect, usePathname } from "next/navigation"
 import { useEffect } from "react"
 import { Button } from "../ui/button"
+import AvatarWrapper from "../wrappers/avatarwrapper"
 
 export default function LeftBar() {
 	const { mutate: logout, isSuccess: loggedOut } = useLogoutUserMutation()
@@ -25,14 +26,11 @@ export default function LeftBar() {
 		<nav className="leftsidebar max-h-screen">
 			<div className="flex flex-col gap-11">
 				<Link href="/" className="flex items-center gap-3">
-					<Image src="/images/logo.svg" alt="logo" width="170" height="36" />
+					<Image src="/images/logo.png" alt="logo" width="170" height="36" />
 				</Link>
 
 				<Link href={`/profile/${user.id}`} className="flex items-center gap-3">
-					<Image
-						src={user.imageUrl || "/icons/profile-placeholder.svg"}
-						alt="profile" width="36" height="36"
-						className="rounded-full" />
+				<AvatarWrapper email={user.email} className="w-10 h-10" />
 
 					<div className="flex flex-col">
 						<p className="body-bold">
