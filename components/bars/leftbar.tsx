@@ -26,7 +26,7 @@ export default function LeftBar() {
 		<nav className="leftsidebar max-h-screen">
 			<div className="flex flex-col gap-11">
 				<Link href="/" className="flex items-center gap-3">
-					<Image src="/images/logo.png" alt="logo" width="170" height="36" />
+					<Image src="/images/logo.svg" alt="logo" width="170" height="36" />
 				</Link>
 
 				<Link href={`/profile/${user.id}`} className="flex items-center gap-3">
