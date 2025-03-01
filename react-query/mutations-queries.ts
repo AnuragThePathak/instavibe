@@ -29,7 +29,7 @@ export const useCreatePostMutation = () => {
 		onSuccess: () => {
 			// Invalidate the query to get the new post
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.GET_RECENT_POSTS
+				queryKey: QUERY_KEYS.GET_INFINITE_POSTS
 			})
 		}
 	})
@@ -56,7 +56,7 @@ export const useDeletePostMutation = () => {
 				deletePost(postId, imageId),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+				queryKey: [QUERY_KEYS.GET_INFINITE_POSTS]
 			})
 		}
 	})
@@ -73,11 +73,7 @@ export const useLikePostMutation = () => {
 			})
 
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.GET_RECENT_POSTS
-			})
-
-			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.GET_POSTS
+				queryKey: QUERY_KEYS.GET_INFINITE_POSTS
 			})
 
 			queryClient.invalidateQueries({
@@ -94,7 +90,7 @@ export const useSavePostMutation = () => {
 		onSuccess: () => {
 
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.GET_RECENT_POSTS
+				queryKey: QUERY_KEYS.GET_INFINITE_POSTS
 			})
 
 			queryClient.invalidateQueries({
@@ -115,7 +111,7 @@ export const useUnsavePostMutation = () => {
 		onSuccess: () => {
 
 			queryClient.invalidateQueries({
-				queryKey: QUERY_KEYS.GET_RECENT_POSTS
+				queryKey: QUERY_KEYS.GET_INFINITE_POSTS
 			})
 
 			queryClient.invalidateQueries({

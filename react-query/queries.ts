@@ -1,14 +1,7 @@
 import QUERY_KEYS from "@/constants/queries"
-import { getFile, getFilePreview, getInfinitePosts, getPostById, getRecentPosts, searchPosts } from "@/server/post-requests"
+import { getFile, getFilePreview, getInfinitePosts, getPostById, searchPosts } from "@/server/post-requests"
 import { getAllUsers, getAvatar, getCurrentUser, getUserById } from "@/server/user-requests"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-
-export const useRecentPostsQuery = () => {
-	return useQuery({
-		queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-		queryFn: () => getRecentPosts()
-	})
-}
 
 export const useGetCurrentUserQuery = () => {
 	return useQuery({

@@ -18,6 +18,7 @@ export default function Page() {
 	const { data: post, isLoading } = useGetPostByIDQuery(id)
 	const { mutate: deletePost } = useDeletePostMutation()
 	const { user } = useUserContext()
+	
 	const handleDelete = () => { 
 		deletePost({ postId: id, imageId: post?.imageId })
 		redirect("/")
