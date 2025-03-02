@@ -16,7 +16,7 @@ export default function LeftBar() {
 	const pathname = usePathname()
 
 	const handleLogout = async (
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     await logout();
@@ -64,7 +64,10 @@ export default function LeftBar() {
 				</ul>
 
 			</div>
-			<Button variant="ghost" className="shad-button_ghost group" disabled={isLoggingOut} onClick={(e) => handleLogout(e)}>
+			<Button variant="ghost" 
+			className="shad-button_ghost group" 
+			disabled={isLoggingOut} 
+			onClick={(e) => handleLogout(e)}>
 				<Image
 					src="/icons/logout.svg"
 					alt="logout"
