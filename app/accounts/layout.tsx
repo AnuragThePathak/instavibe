@@ -1,10 +1,13 @@
+"use client"
+
+import { AUTH_STATUS, useUserContext } from "@/context/authcontext"
 import Image from "next/image"
 import { redirect } from "next/navigation"
 import { ReactNode } from "react"
 
 export default function Layout({ children }: { children: ReactNode }) {
-	const isAuthenticated = false
-	if (isAuthenticated) {
+	const { isAuthenticated } = useUserContext()
+	if (isAuthenticated === AUTH_STATUS.EMAIL_VERIFIED) {
 		redirect("/")
 	}
 

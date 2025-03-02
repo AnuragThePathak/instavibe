@@ -5,7 +5,7 @@ import { IContextType } from "@/types/context"
 import { redirect, usePathname } from "next/navigation"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
-const INITIAL_USER = {
+export const INITIAL_USER = {
 	id: "",
 	name: "",
 	username: "",
@@ -77,15 +77,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}
 
 	useEffect(() => {
+		// 1. if user is not logged in, redirect to login page (unless they are in the signup page)
+		// 2. if user is logged in without email being verified, redirect to verification page unless they are already there
 		const checkAuth = async () => {
-			if (pathname !== "/accounts/signup" && pathname !== "accounts/verify") {
-				const authStatus = await checkAuthUser()
-				if (authStatus === AUTH_STATUS.UNAUTHORIZED) {
-					redirect("/accounts/login")
-				}
-				if (authStatus === AUTH_STATUS.AUTHORIZED) {
-					redirect("/accounts/verification")
-				}
+			const authStatus = await checkAuthUser()
+			if (authStatus === AUTH_STATUS.UNAUTHORIZED && pathname !== "/accounts/signup") {
+				redirect("/accounts/login")
+			}
+			if (authStatus === AUTH_STATUS.AUTHORIZED && pathname !== "/accounts/verification") {
+				redirect("/accounts/verification")
 			}
 		}
 		checkAuth()

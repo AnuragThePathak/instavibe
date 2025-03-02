@@ -32,7 +32,7 @@ export default function Page() {
 
 	return (
 		<div>
-			{isPending ? "Verifying..." : isError ? "Verification failed" : "Verified"}
+			{isPending ? "Verifying..." : isError ? "Verification failed" : "Verified. You'll be redirected to home page..."}
 		</div>
 	)
 }

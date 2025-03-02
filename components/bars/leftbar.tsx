@@ -1,26 +1,29 @@
 "use client"
 
 import { sidebarLinks } from "@/constants"
-import { useUserContext } from "@/context/authcontext"
+import { AUTH_STATUS, INITIAL_USER, useUserContext } from "@/context/authcontext"
 import { useLogoutUserMutation } from "@/react-query/mutations-queries"
 import { INavLink } from "@/types"
 import Image from "next/image"
 import Link from "next/link"
 import { redirect, usePathname } from "next/navigation"
-import { useEffect } from "react"
 import { Button } from "../ui/button"
 import AvatarWrapper from "../wrappers/avatarwrapper"
 
 export default function LeftBar() {
-	const { mutate: logout, isSuccess: loggedOut } = useLogoutUserMutation()
-	const { user } = useUserContext()
+	const { mutateAsync: logout, isPending: isLoggingOut } = useLogoutUserMutation()
+	const { user, setIsAuthenticated, setUser } = useUserContext()
 	const pathname = usePathname()
 
-	useEffect(() => {
-		if (loggedOut) {
-			redirect("/accounts/login")
-		}
-	}, [loggedOut])
+	const handleLogout = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    await logout();
+    setIsAuthenticated(AUTH_STATUS.UNAUTHORIZED)
+    setUser(INITIAL_USER);
+    redirect("/accounts/login");
+  };
 
 	return (
 		<nav className="leftsidebar max-h-screen">
@@ -61,14 +64,15 @@ export default function LeftBar() {
 				</ul>
 
 			</div>
-			<Button variant="ghost" className="shad-button_ghost" onClick={() => logout()}>
+			<Button variant="ghost" className="shad-button_ghost group" disabled={isLoggingOut} onClick={(e) => handleLogout(e)}>
 				<Image
 					src="/icons/logout.svg"
 					alt="logout"
 					height="24"
 					width="24"
+					className="group-hover:invert-white"
 				/>
-				<p className="small-medium lg:base-medium">Logout</p>
+				<p className="small-medium lg:base-medium ">Logout</p>
 			</Button>
 		</nav>
 	)
