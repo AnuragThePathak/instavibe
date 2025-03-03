@@ -1,7 +1,7 @@
 import QUERY_KEYS from "@/constants/queries"
 import { createPost, deletePost, likePost, savePost, unsavePost, updatePost } from "@/server/post-requests"
-import { createUser, loginUser, logoutUser, sendVerificationEmail, verifyEmail } from "@/server/user-requests"
-import { INewPost, INewUser, IUpdatePost } from "@/types"
+import { createUser, loginUser, logoutUser, sendVerificationEmail, updateUser, verifyEmail } from "@/server/user-requests"
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const useCreateUserMutation = () => {
@@ -141,4 +141,19 @@ export const useSendVerificationEmail = () => {
 	return useMutation({
 		mutationFn: () => sendVerificationEmail()
 	})
+}
+
+export const useUpdateUserMutation = () => {
+	const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (user: IUpdateUser) => updateUser(user),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
+      });
+    },
+  });
 }

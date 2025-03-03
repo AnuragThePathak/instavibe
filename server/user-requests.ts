@@ -1,5 +1,5 @@
 "use server"
-import { INewUser } from "@/types"
+import { INewUser, IUpdateUser } from "@/types"
 import { createAdminClient, createSessionClient } from "./appwrite"
 import { ID, Models, Query } from "node-appwrite"
 import { cookies } from "next/headers"
@@ -105,4 +105,19 @@ export async function verifyEmail(userId: string, secret: string) {
 export async function sendVerificationEmail() {
 	const { account } = await createSessionClient()
 	return await account.createVerification(`${process.env.SITE_URL!}/accounts/verify`)
+}
+
+export async function updateUser(user: IUpdateUser) {
+	const { databases } = await createAdminClient()
+	//  Update user
+	const updatedUser = await databases.updateDocument(
+		process.env.APPWRITE_DATABASE_ID!,
+		process.env.APPWRITE_USER_COLLECTION_ID!,
+		user.userId,
+		{
+			name: user.name,
+			bio: user.bio,
+		}
+	)
+	return updatedUser
 }
