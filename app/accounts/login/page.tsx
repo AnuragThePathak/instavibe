@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { AUTH_STATUS, useUserContext } from "@/context/authcontext"
-import { useToast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useLoginUserMutation } from "@/react-query/mutations-queries"
 import { loginSchema } from "@/utils/validation-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,7 +16,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
-	const { toast } = useToast()
 	const { checkAuthUser, isPending: isUserLoading } = useUserContext()
 	const { mutateAsync: loginUser, isPending: isLoggingIn } = useLoginUserMutation()
 
@@ -30,13 +29,14 @@ export default function Page() {
 
 	// 2. Define a submit handler.
 	async function onSubmit(userData: z.infer<typeof loginSchema>) {
+		try {
 		const session = await loginUser({
 			email: userData.email, password: userData.password
 		}) // also this try catch
 		if (!session) {
-			toast({
-				title: "Login Failed. Please try again",
-			})
+			toast.error(
+				"Login Failed. Please try again",
+			)
 		}
 
 		const isUserLoggedIn = await checkAuthUser()
@@ -45,10 +45,14 @@ export default function Page() {
 		} else if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
 			redirect("/accounts/verification")
 		} else {
-			toast({
-				title: "Login Failed. Please try again",
-			})
+			toast.error(
+				"Login Failed. Please try again",
+			)
 		}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	}catch (e) {
+		toast.error("Invalid Credentials")
+	}
 	}
 
 	return (

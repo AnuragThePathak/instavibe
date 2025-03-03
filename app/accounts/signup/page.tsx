@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { AUTH_STATUS, useUserContext } from "@/context/authcontext"
-import { useToast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useCreateUserMutation, useLoginUserMutation, useSendVerificationEmail } from "@/react-query/mutations-queries"
 
 import { signUpSchema } from "@/utils/validation-schema"
@@ -17,11 +17,10 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 export default function Page() {
-	const { toast } = useToast()
 	const { checkAuthUser, isPending: isUserLoading } = useUserContext()
 	const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUserMutation()
 	const { mutateAsync: loginUser, isPending: isLoggingIn } = useLoginUserMutation()
-	const { mutateAsync: sendVerificationEmail, isPending: isSendingEmail } =  useSendVerificationEmail()
+	const { mutateAsync: sendVerificationEmail, isPending: isSendingEmail } = useSendVerificationEmail()
 
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
@@ -35,39 +34,54 @@ export default function Page() {
 
 	// 2. Define a submit handler.
 	async function onSubmit(userData: z.infer<typeof signUpSchema>) {
-		const newUser = await createUser(userData) // wrap arround try catch
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		if (!newUser) {
-			toast({
-				title: "Sign Up Failed. Please try again",
-			})
+		try {
+			const newUser = await createUser(userData) // wrap arround try catch
+			// Do something with the form values.
+			// ✅ This will be type-safe and validated.
+			if (!newUser) {
+				toast.error(
+					"Sign Up Failed. Please try again",
+				)
+			}
+		}
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		catch (e) {
+			toast.error(
+				"Sign Up Failed. Please try again",
+			)
+			return
 		}
 
+		try {
+			const session = await loginUser({
+				email: userData.email, password: userData.password
+			}) // also this try catch
+			if (!session) {
+				toast.error(
+					"Login Failed. But your account has been created.",
+				)
+			}
 
-		const session = await loginUser({
-			email: userData.email, password: userData.password
-		}) // also this try catch
-		if (!session) {
-			toast({
-				title: "Login Failed. Please try again",
-			})
-		}
+			const isEmailSent = await sendVerificationEmail()
+			if (!isEmailSent) {
+				toast.error(
+					"Couldn't send verification email. Please try later.",
+				)
+			}
 
-		const isEmailSent = await sendVerificationEmail()
-		if (!isEmailSent) {
-			toast({
-				title: "Couldn't send verification email. Please try later.",
-			})
-		}
-
-		const isUserLoggedIn = await checkAuthUser()
-		if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
-			redirect("/accounts/verification")
-		} else {
-			toast({
-				title: "Login Failed. Please try again",
-			})
+			const isUserLoggedIn = await checkAuthUser()
+			if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
+				redirect("/accounts/verification")
+			} else {
+				toast.error(
+					"Login Failed. Please try again",
+				)
+			}
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (e) {
+			toast.error(
+				"Login Failed. But your account has been created.",
+			)
 		}
 	}
 

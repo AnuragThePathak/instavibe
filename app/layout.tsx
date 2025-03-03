@@ -4,6 +4,7 @@ import "./globals.css"
 import { AuthProvider } from "@/context/authcontext"
 import QueryProviders from "@/lib/react-query-provider"
 import { Suspense } from "react"
+import { Toaster} from "react-hot-toast"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <Suspense>
             <AuthProvider>
               {children}
+              <Toaster />
             </AuthProvider>
           </Suspense>
         </QueryProviders>
