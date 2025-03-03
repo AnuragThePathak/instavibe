@@ -68,19 +68,19 @@ export default function Page() {
 					"Couldn't send verification email. Please try later.",
 				)
 			}
-
-			const isUserLoggedIn = await checkAuthUser()
-			if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
-				redirect("/accounts/verification")
-			} else {
-				toast.error(
-					"Login Failed. Please try again",
-				)
-			}
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			toast.error(
 				"Login Failed. But your account has been created.",
+			)
+		}
+
+		const isUserLoggedIn = await checkAuthUser()
+		if (isUserLoggedIn === AUTH_STATUS.AUTHORIZED) {
+			redirect("/accounts/verification")
+		} else {
+			toast.error(
+				"Login Failed. Please try again",
 			)
 		}
 	}

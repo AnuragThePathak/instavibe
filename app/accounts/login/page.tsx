@@ -30,13 +30,17 @@ export default function Page() {
 	// 2. Define a submit handler.
 	async function onSubmit(userData: z.infer<typeof loginSchema>) {
 		try {
-		const session = await loginUser({
-			email: userData.email, password: userData.password
-		}) // also this try catch
-		if (!session) {
-			toast.error(
-				"Login Failed. Please try again",
-			)
+			const session = await loginUser({
+				email: userData.email, password: userData.password
+			}) // also this try catch
+			if (!session) {
+				toast.error(
+					"Login Failed. Please try again",
+				)
+			}
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (e) {
+			toast.error("Invalid Credentials")
 		}
 
 		const isUserLoggedIn = await checkAuthUser()
@@ -49,10 +53,6 @@ export default function Page() {
 				"Login Failed. Please try again",
 			)
 		}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	}catch (e) {
-		toast.error("Invalid Credentials")
-	}
 	}
 
 	return (
