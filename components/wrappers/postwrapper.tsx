@@ -21,7 +21,7 @@ export default function PostWrapper({ imageId, className }: { imageId: string, c
 
 	return (
 		<>
-			{isLoadingImage ? (<div className="h-80 w-full flex items-center justify-center">
+			{isLoadingImage ? (<div className="h-80 w-1/2 flex items-center justify-center">
 				<Loader />
 			</div>
 			) :
