@@ -18,10 +18,10 @@ import { Textarea } from "../ui/textarea"
 import FileUploader from "./fileuploader"
 import { postSchema } from "@/utils/validation-schema"
 import { Models } from "node-appwrite"
-import { useToast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useUserContext } from "@/context/authcontext"
 import { useCreatePostMutation, useUpdatePostMutation } from "@/react-query/mutations-queries"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Loader from "../loaders/spinner"
 
 type PostFormProps = {
@@ -31,7 +31,7 @@ type PostFormProps = {
 
 
 export default function PostForm({ post, action }: PostFormProps) {
-	const { toast } = useToast()
+	const router = useRouter()
 	const { user } = useUserContext()
 	const { mutateAsync: createPost, isPending: isCreating } = useCreatePostMutation()
 	const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePostMutation()
@@ -49,34 +49,36 @@ export default function PostForm({ post, action }: PostFormProps) {
 	async function onSubmit(values: z.infer<typeof postSchema>) {
 		// action = update
 		if (post && action === "update") {
-			const updatedPost = await updatePost({
-				...values,
-				postId: post.$id,
-				imageId: post.imageId,
-				imageUrl: post.imageUrl,
-			})
-
-			if (!updatedPost) {
-				toast({
-					title: "Failed to update the post, try again.",
+			try {
+				await updatePost({
+					...values,
+					postId: post.$id,
+					imageId: post.imageId,
+					imageUrl: post.imageUrl,
 				})
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			} catch (e) {
+				toast.error(
+					"Failed to update the post, try again."
+				)
+				return
 			}
 
-			return redirect(`/posts/${post.$id}`)
+			return router.push(`/posts/${post.$id}`)
 		}
 
 		// action = create
-		const newPost = await createPost({
-			...values,
-			userId: user.id,
-		})
-
-		if (!newPost) {
-			toast({
-				title: "Failed to create the post, try again.",
+		try {
+			await createPost({
+				...values,
+				userId: user.id,
 			})
-		} else {
-			redirect("/")
+			router.push("/")
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (e) {
+			toast.error(
+				"Failed to create the post, try again."
+			)
 		}
 	}
 
@@ -148,7 +150,7 @@ export default function PostForm({ post, action }: PostFormProps) {
 				<div className="flex gap-4 items-center justify-end">
 					<Button type="button"
 						className="shad-button_dark_4"
-						onClick={() => redirect("/")}>
+						onClick={() => router.back()}>
 						Cancel
 					</Button>
 					<Button type="submit"

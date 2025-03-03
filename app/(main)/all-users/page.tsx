@@ -2,13 +2,12 @@
 
 import UserCard from "@/components/cards/usercard"
 import Loader from "@/components/loaders/spinner"
-import { useToast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useGetUsersQuery } from "@/react-query/queries"
 import { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 
 export default function Page() {
-	const { toast } = useToast()
 	const { ref: inViewRef, inView } = useInView()
 
 	const { data: creators, fetchNextPage, hasNextPage, isError: isErrorCreators } = useGetUsersQuery()
@@ -20,7 +19,7 @@ export default function Page() {
 		}, [fetchNextPage, inView])
 
 	if (isErrorCreators) {
-		toast({ title: "Something went wrong." })
+		toast.error("Something went wrong.")
 
 		return
 	}

@@ -1,7 +1,7 @@
 "use client"
 
 import { AUTH_STATUS, useUserContext } from "@/context/authcontext"
-import { toast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
 import { useVerifyEmailMutation } from "@/react-query/mutations-queries"
 import { redirect, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -23,9 +23,9 @@ export default function Page() {
 			if (isUserLoggedIn === AUTH_STATUS.EMAIL_VERIFIED) {
 				redirect("/")
 			} else {
-				toast({
-					title: "Email not yet verified. Please try again later.",
-				})
+				toast.error(
+					"Email not yet verified. Please try again later.",
+				)
 			}
 		}, 10000)
 	}, [searchParams, verifyEmail, checkAuthUser])

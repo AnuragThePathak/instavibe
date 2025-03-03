@@ -4,7 +4,7 @@ import PostStats from "@/components/others/poststats"
 import { useGetPostByIDQuery } from "@/react-query/queries"
 import Link from "next/link"
 import moment from "moment"
-import { redirect, useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import Loader from "@/components/loaders/spinner"
 import { useUserContext } from "@/context/authcontext"
@@ -15,17 +15,33 @@ import AvatarWrapper from "@/components/wrappers/avatarwrapper"
 
 export default function Page() {
 	const { id } = useParams<{ id: string }>()
+	const router = useRouter()
 	const { data: post, isLoading } = useGetPostByIDQuery(id)
 	const { mutate: deletePost } = useDeletePostMutation()
 	const { user } = useUserContext()
 	
 	const handleDelete = () => { 
 		deletePost({ postId: id, imageId: post?.imageId })
-		redirect("/")
+		router.back()
 	}
 
 	return (
 		<div className="post_details-container">
+			<div className="hidden md:flex max-w-5xl w-full">
+        <Button
+          onClick={() => router.back()}
+          variant="ghost"
+          className="shad-button_ghost">
+          <Image
+            src={"/icons/back.svg"}
+            alt="back"
+            width={24}
+            height={24}
+          />
+          <p className="small-medium lg:base-medium">Back</p>
+        </Button>
+      </div>
+
 			{isLoading || !post ? <Loader /> : (
 				<div className="post_details-card">
 					<PostWrapper imageId={post.imageId} className="post_details-img" />
@@ -51,9 +67,8 @@ export default function Page() {
 								</div>
 							</Link>
 
-							<div className="flex-center gap-4">
-								<Link href={`/update-post/${post.$id}`}
-									className={`${post.creator.$id !== user.id && "hidden"}`}>
+							{post.creator.$id === user.id && <div className="flex-center gap-4">
+								<Link href={`/update-post/${post.$id}`}>
 									<Image
 										src="/icons/edit.svg"
 										alt="edit"
@@ -64,8 +79,7 @@ export default function Page() {
 								<Button
 									variant="ghost"
 									onClick={handleDelete}
-									className={`post_details-delete_btn
-									 ${post.creator.$id !== user.id && "hidden"}`}>
+									className="post_details-delete_btn">
 									<Image
 										src="/icons/delete.svg"
 										alt="delete"
@@ -73,7 +87,7 @@ export default function Page() {
 										width={24}
 									/>
 								</Button>
-							</div>
+							</div>}
 						</div>
 
 						<hr className="border w-full border-dark-4/80" />
