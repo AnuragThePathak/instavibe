@@ -2,7 +2,7 @@ import { Models } from "node-appwrite";
 import Link from "next/link";
 
 import AvatarWrapper from "@/components/wrappers/avatarwrapper"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
 
 type UserCardProps = {
   user: Models.Document;
@@ -22,9 +22,9 @@ export default function UserCard({ user }: UserCardProps) {
         </p>
       </div>
 
-      <Button type="button" size="sm" className="shad-button_primary px-5">
+      {/* <Button type="button" size="sm" className="shad-button_primary px-5">
         Follow
-      </Button>
+      </Button> */}
     </Link>
   );
 }
