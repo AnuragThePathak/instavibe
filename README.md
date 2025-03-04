@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Instavibe
 
-## Getting Started
+## How is it useful
 
-First, run the development server:
+- Instavibe is a social media platform.
+- Main features include post images, like, save as per the poster's desire.
+- All authorized users can explore all the posts posted on the platform.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Specifications
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Designed with Next.js and Tailwind CSS.
+- Database, Storage and Authentication by Appwrite.
+- Next.js server actions are used for the backend.
+- React query is used client-side caching.
+- Email verifcation is implemeted.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Preview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<img width="1347" alt="Screenshot 2025-03-03 at 9 24 57 PM" src="https://github.com/user-attachments/assets/ca839d80-7edf-442b-8eef-551372c1218f" />
 
-## Learn More
+<img width="1343" alt="Screenshot 2025-03-03 at 9 28 04 PM" src="https://github.com/user-attachments/assets/fcbf3acd-7093-4130-ad39-b9d576f6b695" />
 
-To learn more about Next.js, take a look at the following resources:
+<img width="1336" alt="Screenshot 2025-03-04 at 1 01 11 PM" src="https://github.com/user-attachments/assets/c4519965-330e-42ac-be5b-709ae6fdbcd9" />
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<img width="1343" alt="Screenshot 2025-03-03 at 9 28 57 PM" src="https://github.com/user-attachments/assets/9da15eb4-5983-4576-b8fc-7f5356090445" />
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<img width="1337" alt="Screenshot 2025-03-03 at 9 45 06 PM" src="https://github.com/user-attachments/assets/677995af-d247-4ef6-ba09-3055a389c780" />
 
-## Deploy on Vercel
+<img width="1341" alt="Screenshot 2025-03-03 at 9 32 35 PM" src="https://github.com/user-attachments/assets/5a89e7b6-b15b-4d57-bce4-12437ce57c79" />
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<img width="1339" alt="Screenshot 2025-03-04 at 12 10 24 AM" src="https://github.com/user-attachments/assets/b458c4f1-5b10-41ca-947f-34c6cc56696e" />
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
