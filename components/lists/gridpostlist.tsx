@@ -20,7 +20,8 @@ export default function GridPostList({ posts, showUsers = true, showStats = true
 			{posts.map((post) => (
 				<li key={post.$id} className="relative min-w-80 h-80">
 					<Link href={`/posts/${post.$id}`} className="grid-post_link">
-						<PostWrapper imageId={post.imageId} className="h-full w-full object-cover" />
+						<PostWrapper imageId={post.imageId} halfWidth={false} 
+						className="h-full w-full object-cover" />
 					</Link>
 
 					<div className="grid-post_user">

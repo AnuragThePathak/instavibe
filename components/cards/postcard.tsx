@@ -52,7 +52,7 @@ export default function PostCard({ post }: { post: Models.Document }) {
 					</ul>
 				</div>
 
-				<PostWrapper imageId={post.imageId} className="post-card_img" />
+				<PostWrapper imageId={post.imageId} className="post-card_img" halfWidth={false} />
 			</Link>
 
 			<PostStats post={post} userId={user.id} />

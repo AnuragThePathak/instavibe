@@ -44,7 +44,7 @@ export default function Page() {
 
 			{isLoading || !post ? <Loader /> : (
 				<div className="post_details-card">
-					<PostWrapper imageId={post.imageId} className="post_details-img" />
+					<PostWrapper imageId={post.imageId} className="post_details-img" halfWidth={true} />
 
 					<div className="post_details-info">
 						<div className="flex-between w-full">
